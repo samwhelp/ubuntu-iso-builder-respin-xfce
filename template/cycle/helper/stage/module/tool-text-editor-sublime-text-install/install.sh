@@ -44,110 +44,51 @@ REF_INIT_DIR_PATH="${REF_BASE_DIR_PATH}/../../../ext"
 
 
 ################################################################################
-### Head: Model / mod_module_network_config_install
+### Head: Model / mod_module_sublime_text_install
 ##
 
-sys_network_config_install_network_manager_via_cmd () {
+sys_sublime_text_install () {
 
 
-
-
-cat << __EOF__ > /etc/NetworkManager/NetworkManager.conf
-[main]
-rc-manager=resolvconf
-plugins=ifupdown,keyfile
-dns=dnsmasq
-
-[ifupdown]
-managed=false
-__EOF__
-
-
+	local deb_version="4200"
+	local deb_name="sublime-text_build-${deb_version}_amd64.deb"
+	local deb_url="https://download.sublimetext.com/${deb_name}"
+	local tmp_dir_path="/tmp/sublime-text"
+	local tmp_file_path="${tmp_dir_path}/${deb_name}"
 
 
 	util_error_echo
-	util_error_echo cat /etc/NetworkManager/NetworkManager.conf
+	util_error_echo mkdir -p "${tmp_dir_path}"
 	util_error_echo
-	cat /etc/NetworkManager/NetworkManager.conf
+	mkdir -p "${tmp_dir_path}"
 
 
+	util_error_echo
+	util_error_echo wget -c "${deb_url}" -O "${tmp_file_path}"
+	util_error_echo
+	wget -c "${deb_url}" -O "${tmp_file_path}"
+
+
+	util_error_echo
+	util_error_echo dpkg -i "${tmp_file_path}"
+	util_error_echo
+	dpkg -i "${tmp_file_path}"
 
 
 	return 0
 }
 
-sys_network_config_install_netplan_via_cmd () {
+mod_module_sublime_text_install () {
 
 
-	util_error_echo
-	util_error_echo mkdir -p /etc/netplan
-	util_error_echo
-	mkdir -p /etc/netplan
-
-
-
-
-cat << __EOF__ > /etc/netplan/01-network-manager-all.yaml
-network:
-  version: 2
-  renderer: NetworkManager
-__EOF__
-
-
-
-
-	util_error_echo
-	util_error_echo cat /etc/netplan/01-network-manager-all.yaml
-	util_error_echo
-	cat /etc/netplan/01-network-manager-all.yaml
-
-
-
-
-	return 0
-}
-
-sys_network_config_install_via_cmd () {
-
-
-	sys_network_config_install_network_manager_via_cmd
-
-	sys_network_config_install_netplan_via_cmd
-
-
-	return 0
-}
-
-sys_network_config_install_via_file () {
-
-
-	local source_dir_path="${REF_BASE_DIR_PATH}/asset/overlay"
-	local target_dir_path="/"
-
-	util_error_echo
-	util_error_echo cp -rfT "${source_dir_path}" "${target_dir_path}"
-	util_error_echo
-	cp -rfT "${source_dir_path}" "${target_dir_path}"
-
-
-	return 0
-}
-
-
-mod_module_network_config_install () {
-
-	sys_network_config_install_via_cmd
-
-	#sys_network_config_install_via_file
-
-
+	sys_sublime_text_install
 
 
 	return 0
 }
 
 ##
-### Tail: Model / mod_module_network_config_install
+### Tail: Model / mod_module_sublime_text_install
 ################################################################################
 
 
@@ -168,7 +109,7 @@ portal_install () {
 	util_error_echo "[Run Module]: ${script_file_path}"
 
 
-	mod_module_network_config_install
+	mod_module_sublime_text_install
 
 
 }

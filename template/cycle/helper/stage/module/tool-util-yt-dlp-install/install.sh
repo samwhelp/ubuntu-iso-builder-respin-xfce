@@ -44,110 +44,44 @@ REF_INIT_DIR_PATH="${REF_BASE_DIR_PATH}/../../../ext"
 
 
 ################################################################################
-### Head: Model / mod_module_network_config_install
+### Head: Model / mod_module_yt_dlp_install
 ##
 
-sys_network_config_install_network_manager_via_cmd () {
-
-
-
-
-cat << __EOF__ > /etc/NetworkManager/NetworkManager.conf
-[main]
-rc-manager=resolvconf
-plugins=ifupdown,keyfile
-dns=dnsmasq
-
-[ifupdown]
-managed=false
-__EOF__
-
-
+sys_yt_dlp_install () {
 
 
 	util_error_echo
-	util_error_echo cat /etc/NetworkManager/NetworkManager.conf
+	util_error_echo mkdir -p "/etc/skel/.local/bin"
 	util_error_echo
-	cat /etc/NetworkManager/NetworkManager.conf
+	mkdir -p "/etc/skel/.local/bin"
 
 
+	util_error_echo
+	util_error_echo wget -c 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp' -O "/etc/skel/.local/bin/yt-dlp"
+	util_error_echo
+	wget -c 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp' -O "/etc/skel/.local/bin/yt-dlp"
+
+
+	util_error_echo
+	util_error_echo chmod 755 "/etc/skel/.local/bin/yt-dlp"
+	util_error_echo
+	chmod 755 "/etc/skel/.local/bin/yt-dlp"
 
 
 	return 0
 }
 
-sys_network_config_install_netplan_via_cmd () {
+mod_module_yt_dlp_install () {
 
 
-	util_error_echo
-	util_error_echo mkdir -p /etc/netplan
-	util_error_echo
-	mkdir -p /etc/netplan
-
-
-
-
-cat << __EOF__ > /etc/netplan/01-network-manager-all.yaml
-network:
-  version: 2
-  renderer: NetworkManager
-__EOF__
-
-
-
-
-	util_error_echo
-	util_error_echo cat /etc/netplan/01-network-manager-all.yaml
-	util_error_echo
-	cat /etc/netplan/01-network-manager-all.yaml
-
-
-
-
-	return 0
-}
-
-sys_network_config_install_via_cmd () {
-
-
-	sys_network_config_install_network_manager_via_cmd
-
-	sys_network_config_install_netplan_via_cmd
-
-
-	return 0
-}
-
-sys_network_config_install_via_file () {
-
-
-	local source_dir_path="${REF_BASE_DIR_PATH}/asset/overlay"
-	local target_dir_path="/"
-
-	util_error_echo
-	util_error_echo cp -rfT "${source_dir_path}" "${target_dir_path}"
-	util_error_echo
-	cp -rfT "${source_dir_path}" "${target_dir_path}"
-
-
-	return 0
-}
-
-
-mod_module_network_config_install () {
-
-	sys_network_config_install_via_cmd
-
-	#sys_network_config_install_via_file
-
-
+	sys_yt_dlp_install
 
 
 	return 0
 }
 
 ##
-### Tail: Model / mod_module_network_config_install
+### Tail: Model / mod_module_yt_dlp_install
 ################################################################################
 
 
@@ -168,7 +102,7 @@ portal_install () {
 	util_error_echo "[Run Module]: ${script_file_path}"
 
 
-	mod_module_network_config_install
+	mod_module_yt_dlp_install
 
 
 }
